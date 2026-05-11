@@ -1,25 +1,31 @@
 ﻿class StudyTask {
   StudyTask({
+    required this.taskId,
     required this.day,
     required this.type,
     required this.title,
     required this.durationMinutes,
     required this.resourceId,
+    required this.completed,
   });
 
+  final String taskId;
   final int day;
   final String type;
   final String title;
   final int durationMinutes;
   final String resourceId;
+  final bool completed;
 
   factory StudyTask.fromJson(Map<String, dynamic> json) {
     return StudyTask(
+      taskId: json['task_id'] as String,
       day: json['day'] as int,
       type: json['type'] as String,
       title: json['title'] as String,
       durationMinutes: json['duration_minutes'] as int,
       resourceId: json['resource_id'] as String,
+      completed: json['completed'] as bool? ?? false,
     );
   }
 }

@@ -50,6 +50,24 @@ class _PlanPageState extends State<PlanPage> {
     }
   }
 
+  Future<void> _completeTask(String taskId) async {
+    try {
+      final updated = await _repository.completeTask(taskId);
+      if (!mounted) return;
+      setState(() {
+        _plan = updated;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('打卡成功')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('打卡失败：$e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +96,18 @@ class _PlanPageState extends State<PlanPage> {
                     ..._plan!.tasks.map(
                       (task) => Card(
                         child: ListTile(
-                          leading: Icon(task.type == 'video' ? Icons.play_circle_fill : Icons.task_alt),
+                          leading: Icon(
+                            task.completed ? Icons.check_circle : Icons.radio_button_unchecked,
+                            color: task.completed ? Colors.green : null,
+                          ),
                           title: Text(task.title),
                           subtitle: Text('第${task.day}天 · ${task.durationMinutes} 分钟'),
+                          trailing: task.completed
+                              ? const Text('已完成')
+                              : ElevatedButton(
+                                  onPressed: () => _completeTask(task.taskId),
+                                  child: const Text('完成打卡'),
+                                ),
                         ),
                       ),
                     ),

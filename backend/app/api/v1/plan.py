@@ -21,3 +21,20 @@ def plan_today() -> dict:
     if plan is None:
         return fail('暂无计划，请先生成计划', 2001)
     return success(plan.model_dump())
+
+
+@router.post('/tasks/{task_id}/complete')
+def complete_task(task_id: str) -> dict:
+    plan = plan_store.get_today()
+    if plan is None:
+        return fail('暂无计划，请先生成计划', 2001)
+
+    matched = any(task.task_id == task_id for task in plan.tasks)
+    if not matched:
+        return fail('任务不存在', 2004)
+
+    updated = plan_store.complete_task(task_id)
+    if updated is None:
+        return fail('暂无计划，请先生成计划', 2001)
+
+    return success(updated.model_dump(), '打卡成功')

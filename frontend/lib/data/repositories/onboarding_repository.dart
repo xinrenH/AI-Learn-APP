@@ -34,4 +34,10 @@ class OnboardingRepository {
     final data = ApiResponseParser.requireData(response);
     return StudyPlan.fromJson(data);
   }
+
+  Future<StudyPlan> completeTask(String taskId) async {
+    final response = await ApiClient.dio.post(ApiEndpoints.completeTask(taskId));
+    final data = ApiResponseParser.requireData(response);
+    return StudyPlan.fromJson(data);
+  }
 }

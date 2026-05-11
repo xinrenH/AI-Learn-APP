@@ -2,11 +2,13 @@
 
 
 class StudyTask(BaseModel):
+    task_id: str
     day: int
     type: str
     title: str
     duration_minutes: int
     resource_id: str
+    completed: bool = False
 
 
 class PlanGenerateRequest(BaseModel):
